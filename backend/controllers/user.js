@@ -2,7 +2,8 @@
 
 const bcryptjs = require('bcryptjs'); 
 const jwt = require('jsonwebtoken');
-const User = require('../models/User'); 
+const User = require('../models/User');
+const MaskData = require('maskdata'); // masquage des données 
 const dotenv = require("dotenv");   // charge les variables d'envirronnement du fichier .env dans process.env
 dotenv.config();
 
@@ -10,10 +11,11 @@ dotenv.config();
 
 // fonction de creation d'un compte avec email et password crypté que l'on enregistre dans mango db
 exports.signup = (req, res, next) => { 
+  const maskedMail = MaskData.maskEmail2(req.body.email);
   bcryptjs.hash(req.body.password, 10)    
     .then(hash => {
       const user = new User({             
-        email: req.body.email,
+        email: maskedMail,
         password: hash
       });
       console.log(user);
@@ -27,9 +29,10 @@ exports.signup = (req, res, next) => {
 
 // fonction d'autentification de connexion 
 exports.login = (req, res, next) => { 
+  const maskedMail = MaskData.maskEmail2(req.body.email);
   process.env.Token_Secret_Key= generateRandomString(15);
   console.log(process.env.Token_Secret_Key);
-    User.findOne({ email: req.body.email }) 
+    User.findOne({ email:maskedMail}) 
       .then(user => {
         if (!user) { 
           console.log("mail non trouvé");

@@ -12,3 +12,5 @@ schema
 .is().not().oneOf(['Passw0rd', 'Password123']); // Blacklister ces valeurs
  
 module.exports = schema;
+
+// peut se premunir en partie su XSS cross site scripting

@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 const path = require('path'); 
 const dotenv = require("dotenv");   // charge les variables d'envirronnement du fichier .env dans process.env
 dotenv.config();
-//const mongoSanitize = require('express-mongo-sanitize');
-//const helmet = require("helmet");
+const mongoSanitize = require('express-mongo-sanitize');
+const helmet = require("helmet");
 
 const userRoutes = require('./routes/user');  
 const sauceRoutes = require('./routes/sauces');  
@@ -29,16 +29,15 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Cross-Origin-Ressource-Policy','cross-origin');
   next();
 });
 
 
 // gestion de l'interception des requêttes du client et appèle des routeurs 
 app.use(express.json()); 
-
-//app.use(mongoSanitize()); // mongo-sanitize to prevent operator injection
+app.use(mongoSanitize());  //Le package mangoSanitiyse desinfecte les requetes malvaillantes vers mangodb dont celle commencant par un $ ...
 //app.use(helmet());    // utilisation du module 'helmet' pour la sécurité en protégeant l'application des failles XSS ciblant les cookies
-
 
 app.use('/api/auth', userRoutes )       // intercepte requête avec le nom du premier arguemnt puis appèle de l'aiguilleur crée dans dossier routeur et importé ici
 app.use('/api/sauces', sauceRoutes ) 
