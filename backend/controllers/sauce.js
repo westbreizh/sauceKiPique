@@ -136,22 +136,19 @@ exports.likeOrNot = (req, res, next) => {
           .then(() => res.status(200).json({ message: 'Objet modifié !'}))
           .catch(error => res.status(400).json({ error }));
       }else if (likeorNot == -1 && !(sauce.usersDisliked.includes(userId))){    //  utilisateur dislike pour la première fois
-          console.log("on se trouve dans le cas likeorNot  égal -1 et id non dans la base de données");
           Sauce.updateOne({ _id: req.params.id }, {$push:{usersDisliked: userId}, $inc:{dislikes: 1} }) 
           .then(() => res.status(200).json({ message: 'Objet modifié !'}))
           .catch(error => res.status(400).json({ error }));
       }else if (likeorNot == 0 && sauce.usersLiked.includes(userId)){           // utilisateur enlève son like
-        console.log("on se trouve dans le cas like 0 et id dans la base de données, pour les likes");
-        Sauce.updateOne({ _id: req.params.id }, {$pull:{usersLiked: userId}, $inc:{likes: -1} }) 
-        .then(() => res.status(200).json({ message: 'Objet modifié !'}))
-        .catch(error => res.status(400).json({ error }));
+          Sauce.updateOne({ _id: req.params.id }, {$pull:{usersLiked: userId}, $inc:{likes: -1} }) 
+          .then(() => res.status(200).json({ message: 'Objet modifié !'}))
+          .catch(error => res.status(400).json({ error }));
         }else if (likeorNot == 0 && sauce.usersDisliked.includes(userId)){      // utilisateur enlève son dislike
-        console.log("on se trouve dans le cas like 0 et id dans la base de données, pour les dislikes");
         Sauce.updateOne({ _id: req.params.id }, {$pull:{usersDisliked: userId}, $inc:{dislikes: -1} }) 
-        .then(() => res.status(200).json({ message: 'Objet modifié !'}))
-        .catch(error => res.status(400).json({ error }));
+          .then(() => res.status(200).json({ message: 'Objet modifié !'}))
+          .catch(error => res.status(400).json({ error }));
         }else {
-        console.log("Ya une yeucou ds le tajepo !!");
+          console.log("Ya une yeucou ds le tajepo !!");
       }
     })
     .catch( 

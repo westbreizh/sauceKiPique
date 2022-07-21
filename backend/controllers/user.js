@@ -4,7 +4,7 @@ const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const MaskData = require('maskdata'); // masquage des données 
-const dotenv = require("dotenv");   // charge les variables d'envirronnement du fichier .env dans process.env
+const dotenv = require("dotenv");   // charge les variables d'environnement du fichier .env dans process.env
 dotenv.config();
 
 
@@ -31,7 +31,7 @@ exports.signup = (req, res, next) => {
 exports.login = (req, res, next) => { 
   const maskedMail = MaskData.maskEmail2(req.body.email);
   process.env.Token_Secret_Key= generateRandomString(15);
-  console.log(process.env.Token_Secret_Key);
+  console.log("la clef secrête d'encodage du token est:" + process.env.Token_Secret_Key);
     User.findOne({ email:maskedMail}) 
       .then(user => {
         if (!user) { 

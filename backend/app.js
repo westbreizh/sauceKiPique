@@ -27,6 +27,8 @@ mongoose.connect(`mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASS
 // gestion du cross, des différence d'adresse url éventuel entre serveur et client
 app.use((req, res, next) => { 
   res.setHeader('Access-Control-Allow-Origin', '*');
+  //res.setHeader('Access-Control-Allow-Origin', '../frontend');
+  //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200/');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.setHeader('Cross-Origin-Ressource-Policy','cross-origin');
@@ -37,7 +39,7 @@ app.use((req, res, next) => {
 // gestion de l'interception des requêttes du client et appèle des routeurs 
 app.use(express.json()); 
 app.use(mongoSanitize());  //Le package mangoSanitiyse desinfecte les requetes malvaillantes vers mangodb dont celle commencant par un $ ...
-//app.use(helmet());    // utilisation du module 'helmet' pour la sécurité en protégeant l'application des failles XSS ciblant les cookies
+//app.use(helmet());    // utilisation du module 'helmet' pour la sécurité en protégeant l'application des failles XSS 
 
 app.use('/api/auth', userRoutes )       // intercepte requête avec le nom du premier arguemnt puis appèle de l'aiguilleur crée dans dossier routeur et importé ici
 app.use('/api/sauces', sauceRoutes ) 
