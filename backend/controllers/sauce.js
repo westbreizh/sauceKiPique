@@ -9,7 +9,6 @@ const Sauce = require('../models/Sauce');
 
 exports.createSauce = (req, res, next) => { 
   const sauceObject = JSON.parse(req.body.sauce);     // le fait d'avoir un fichier image change le format de la requete. SON.parse() transforme un obet stringifié en objet javascript exploitable
-  delete sauceObject._userId;     // par sécurité on suprime l'id envoyé en s'appuie oar celui récupéré via le token 
   const sauce = new Sauce({ 
     ...sauceObject,     // opérateur spread raccourci
     likes: 0, 
@@ -22,7 +21,7 @@ exports.createSauce = (req, res, next) => {
     () => {
       console.log("la sauce est bien enregistré " + sauce);
       res.status(201).json({ 
-      message: 'Post saved successfully!'
+      message: 'sauce saved successfully!'
       })
       ;
     }
@@ -47,7 +46,7 @@ exports.getArrayOfAllSauce = (req, res, next) => {
   ).catch(
     (error) => {
       res.status(400).json({
-        error: error
+        error
       });
     }
   );
@@ -82,7 +81,7 @@ exports.deleteSauce = (req, res, next) => {
       const filename = sauce.imageUrl.split('/images/')[1];     // on extrait le nom du fichier à supprimer, objet à droite de images dans le  tableau crée par spli()
       fs.unlink(`images/${filename}`, () => {                   // on supprime le fichier via fs.unlink
         Sauce.deleteOne({ _id: req.params.id }) 
-          .then(() => res.status(200).json({ message: 'Objet supprimé !'}))
+          .then(() => res.status(200).json({ message: 'sauce supprimée !'}))
           .catch(error => res.status(400).json({ error }));
       });
     })
@@ -99,18 +98,16 @@ exports.modifySauce = (req, res, next) => {
   {
     ...JSON.parse(req.body.sauce), 
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
-     } : { ...req.body };        //sinon
+     } : { ...req.body };        //si pas d'image modifié
 
-  //delete sauceObject.userId;
   Sauce.findOne({_id: req.params.id})
        .then((sauce) => {
-           //if (sauce.userId != req.auth.userId) {  //?? a revoir
             if (sauce.userId != sauceObject.userId) {  
                res.status(401).json({ message : 'Not authorized'});
            } else {
 
               Sauce.updateOne({ _id: req.params.id }, { ...sauceObject, _id: req.params.id }) 
-              .then(() => res.status(200).json({ message: 'Objet modifié !'}))
+              .then(() => res.status(200).json({ message: 'sauce modifiée !'}))
               .catch(error => res.status(400).json({ error }));
               };
               if ( sauceObject.imageUrl != undefined){
