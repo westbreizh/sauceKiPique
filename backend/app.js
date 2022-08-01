@@ -29,7 +29,7 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4200');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  //res.setHeader('Cross-Origin-Ressource-Policy','cross-origin');
+  res.setHeader('Cross-Origin-Ressource-Policy','cross-origin');
   //res.setHeader('Cross-Origin-Ressource-Policy','same-site');
   //res.setHeader('Content-Security-Policy', "default-src 'self'");
   next();
@@ -40,10 +40,11 @@ app.use((req, res, next) => {
 // gestion de l'interception des requêttes du client et appèle des routeurs 
 app.use(express.json()); 
 app.use(mongoSanitize());  //Le package mangoSanitiyse desinfecte les requetes malvaillantes vers mangodb dont celle commencant par un $ ...
-//app.use(helmet());    // utilisation du module 'helmet' pour la sécurité en protégeant l'application des failles XSS 
+app.use('/images', express.static(path.join(__dirname, 'images')));     // Middleware permettant de charger les fichiers qui sont dans le repertoire images, on ne connaitra pas l'emplacement de notre ressource image donc on passe par le module path .... _dirname coorespond à l'endroit ou l'on se trouve et on oint jusqu'au dossier image pour avoir le chemin ...
+app.use(helmet());    // utilisation du module 'helmet' pour la sécurité en protégeant l'application des failles XSS 
+
 app.use('/api/auth', userRoutes )       // intercepte requête avec le début du nom de la route et ensuite dirige vers le routeur
 app.use('/api/sauces', sauceRoutes ) 
-app.use('/images', express.static(path.join(__dirname, 'images')));     // Middleware permettant de charger les fichiers qui sont dans le repertoire images, on ne connaitra pas l'emplacement de notre ressource image donc on passe par le module path .... _dirname coorespond à l'endroit ou l'on se trouve et on oint jusqu'au dossier image pour avoir le chemin ...
 
 
  
